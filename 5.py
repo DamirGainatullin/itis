@@ -1,4 +1,4 @@
-a = [1, 2, 3, 4]
+a = [9, 9]
 i = len(a) - 1
 if a[i] == 9:
     while a[i] == 9:
@@ -7,6 +7,8 @@ if a[i] == 9:
     if i == -1:
         a.append(1)
         a[0], a[-1] = a[-1], a[0]
+    else:
+        a[i] += 1
 else:
     a[i] += 1
 print(a)
