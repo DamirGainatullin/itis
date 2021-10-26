@@ -1,0 +1,74 @@
+import time
+
+
+class Tamagochi:
+    def __init__(self, name):
+        self.name = name
+        self.health = 100
+        self.satiety = 100
+        self.start_time = time.time()
+        self.current_time = time.time()
+        self.difference = 0
+        self.live = True
+
+    def check(self):
+        self.current_time = time.time()
+        self.difference = int(self.current_time - self.start_time)
+        if self.satiety - self.difference < 0 and self.health - (self.difference - self.satiety) > 0:
+            self.health = self.health - (self.difference - self.satiety)
+            self.satiety = 0
+            # return f"Здоровье: {self.health}"
+        elif self.health - (self.difference - self.satiety) <= 0 and self.satiety - self.difference <= 0:
+            self.satiety = 0
+            self.health = 0
+            self.live = False
+        elif self.health - (self.difference - self.satiety) >= 0 and self.satiety - self.difference >= 0:
+            self.satiety -= self.difference
+            # return f"Сытость: {self.satiety}"
+        self.start_time = time.time()
+
+    def feed(self):
+        self.check()
+        if self.live:
+            self.satiety = 100
+        else:
+            return 'death :('
+
+    def check_status(self):
+        self.check()
+        if self.live:
+            return (f"name: {self.name}, health: {self.health}, satiety: {self.satiety}")
+        else:
+            return 'death :('
+
+
+class Card:
+    def __init__(self, suit, value):
+        self.suit = suit
+        self.value = value
+
+
+class Hand:
+    def __init__(self):
+        self.hand = set()
+        self.combs = {
+            'Роял Флэш': {'10-diamonds', 'J-diamonds', 'Q-diamonds', 'K-diamonds', 'A-diamonds'},
+            'Стрит-Флэш': {'3-spades', '4-spades', '5-spades', '6-spades', '7-spades'},
+            'Каре': {'9-clubs', '9-diamonds', '9-hearts', '9-spades', '4-spades'},
+            'Фулл-хауз': {'J-diamonds,J-hearts,J-spades,3-hearts,3-clubs'},
+            'Флэш': {'2-hearts,10-hearts,K-hearts,Q-hearts,4-hearts'},
+            'Стрит': {'4-clubs,5-diamonds,6-spades,7-hearts,8-clubs'}
+        }
+
+    def add_card(self, card):
+        if len(self.hand) < 5:
+            self.hand.add(f'{str(card.value)}-{str(card.suit)}')
+        else:
+            print('You have 5 cards in hand')
+
+    def combs_check(self):
+        # print(self.hand)
+        for i in self.combs.keys():
+            if self.combs[i] == self.hand:
+                return i
+        return 'You have no combinations'
